@@ -1,0 +1,89 @@
+// Copyright (c) 2025 tommyZZM
+// tommys-comfy-screen-capturer is licensed under Mulan PSL v2.
+// You can use this software according to the terms and conditions of the Mulan PSL v2.
+// You may obtain a copy of Mulan PSL v2 at:
+//         http://license.coscl.org.cn/MulanPSL2
+// THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+// EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+// MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+// See the Mulan PSL v2 for more details.
+//
+
+.app {
+  user-select: none;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #eee;
+  box-sizing: border-box;
+  position: relative;
+  background-color: rgba(black, 0.1);
+  border-radius: 5px;
+
+  &.isPin {
+    animation: borderColorChange 2s infinite;
+    pointer-events: none;
+    background-color: transparent;
+
+    .appDraggableWrapper {
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes borderColorChange {
+  0% {
+    border-color: #f39c12;
+  }
+  33% {
+    border-color: #3498db;
+  }
+  66% {
+    border-color: #ecf0f1;
+  }
+  100% {
+    border-color: #f39c12;
+  }
+}
+
+.appDraggableWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 60px;
+  opacity: 0.6;
+  pointer-events: none;
+
+  .appDraggableHandle {
+    cursor: move;
+    transition: transform 0.3s, opacity 0.3s;
+    padding: 20px;
+    border-radius: 20px;
+    border: 2px dashed #fff;
+    background-color: rgba(0, 0, 0, 0.2);
+    line-height: 1;
+    pointer-events: all;
+    opacity: 0.2;
+    &:hover {
+      opacity: 0.9;
+      transform: scale3d(1.1, 1.1, 1.1);
+    }
+  }
+}
+
+.appSpinWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  :global {
+    .ant-spin-container {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
