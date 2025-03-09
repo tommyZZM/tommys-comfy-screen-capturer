@@ -11,7 +11,7 @@
 
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Modal, InputNumber, Button, Form, Input, message, Switch, Spin } from "antd";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbtack, faThumbtackSlash, faCamera, faSave, faCheck, faCircleXmark, faGears, faServer, faArrowsAlt, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -40,6 +40,7 @@ function getUrlCaptureScreen(port) {
 }
 
 function App() {
+  const refServerStarted = useRef(false);
   const [changed, setChanged] = useState(0);
   const [isPendingInitial, setIsPendingInitial] = useState(true);
   const [windowId, setWindowId] = useState(getWindowRandomId());
@@ -59,6 +60,10 @@ function App() {
   const [form] = Form.useForm();
 
   const { serverPort, isStartServer } = form.getFieldsValue();
+
+  useEffect(() => {
+    refServerStarted.current = serverStarted;
+  }, [serverStarted])
 
   useEffect(() => {
     setIsPendingInitial(true);
@@ -81,7 +86,7 @@ function App() {
       await invoke('set_is_pin', { isPin: false });
 
       const unliste_copy_url_to_clipboard = await listen('copy_screenshot_url', () => {
-        handleCopyUrlToClipboard();
+        handleCopyUrlToClipboard(form.getFieldsValue().serverPort);
       });
 
       const isStartServerBackend = await invoke('get_is_server_running');
@@ -198,10 +203,14 @@ function App() {
   };
 
   // 用于复制 URL 到剪贴板
-  const handleCopyUrlToClipboard = () => {
-    const url = getUrlCaptureScreen(serverPort);
+  const handleCopyUrlToClipboard = (port = serverPort) => {
+    const url = getUrlCaptureScreen(port);
     writeText(url).then(() => {
-      message.success("URL copied!");
+      if (refServerStarted.current) {
+        message.success("URL copied!");
+      } else {
+        message.info("URL copied! Server not startted!");
+      }
     }).catch(err => {
       console.error(err);
       message.error("Failed to copy URL.");
@@ -352,7 +361,7 @@ function App() {
             <Form.Item label="Size" name="size" rules={[{ required: true, message: 'Please input size!' }]}>
               <WidthHeightField size="small" />
             </Form.Item>
-            <div style={{ height: 32, paddingBottom: 8 }} css={flexAlignStartStyle}>Server {isStartServer && <div style={{ marginLeft: 5 }}><small><a onClick={() => handleCopyUrlToClipboard(urlCaptureScreen)}>{urlCaptureScreen}</a></small></div>}</div>
+            <div style={{ height: 32, paddingBottom: 8 }} css={flexAlignStartStyle}>Server {isStartServer && <div style={{ marginLeft: 5 }}><small><a onClick={() => handleCopyUrlToClipboard(serverPort)}>{urlCaptureScreen}</a></small></div>}</div>
             <Form.Item label={null} name="isStartServer" valuePropName="checked">
               <Switch onChange={() => setChanged(a => a + 1)}>Start Server</Switch>
             </Form.Item>

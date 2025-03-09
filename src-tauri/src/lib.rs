@@ -238,14 +238,14 @@ fn get_is_server_running(state: State<'_, RecorderState>) -> bool {
     let http_server = state.http_server.lock().unwrap();
     let is_running = http_server.is_some();
 
-    let tray_menu = state.tray_menu.lock().unwrap();
-    if let Some(tray_menu) = &*tray_menu {
-        if let Some(menu_item_kind) = tray_menu.get("copy_screenshot_url") {
-            if let MenuItemKind::MenuItem(menu_item) = menu_item_kind {
-                menu_item.set_enabled(is_running);
-            }
-        }
-    }
+    // let tray_menu = state.tray_menu.lock().unwrap();
+    // if let Some(tray_menu) = &*tray_menu {
+    //     if let Some(menu_item_kind) = tray_menu.get("copy_screenshot_url") {
+    //         if let MenuItemKind::MenuItem(menu_item) = menu_item_kind {
+    //             menu_item.set_enabled(is_running);
+    //         }
+    //     }
+    // }
 
     is_running
 }
@@ -298,7 +298,7 @@ pub fn run() {
             let pin_i = MenuItem::with_id(app, "pin", "Pin", true, None::<&str>)?;
             let unpin_i = MenuItem::with_id(app, "unpin", "UnPin", false, None::<&str>)?;
             let copy_url_i =
-                MenuItem::with_id(app, "copy_screenshot_url", "Copy ScreenShoot Url", false, None::<&str>)?;
+                MenuItem::with_id(app, "copy_screenshot_url", "Copy ScreenShoot Url", true, None::<&str>)?;
 
             let menu = Menu::with_items(
                 app,
