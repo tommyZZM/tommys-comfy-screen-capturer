@@ -18,6 +18,17 @@ Tommy's Comfy Screen Capturer 是一个特定的截图工具
 
 本项目基于 [木兰协议 v2](https://license.coscl.org.cn/MulanPSL2) 进行许可。详情请参阅 [LICENSE](LICENSE) 文件。
 
+## Dev / Build
+- `pnpm i`
+
+```
+pnpm tauri dev
+```
+
+```
+pnpm tauri build
+```
+
 ---
 
 # Tommy's Comfy Screen Capturer
